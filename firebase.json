@@ -3,7 +3,7 @@
     {
       "source": "functions",
       "codebase": "default",
-      "runtime": "nodejs20",
+      "runtime": "nodejs22",
       "ignore": [
         "node_modules",
         ".git",
@@ -18,7 +18,7 @@
       "port": 5001
     },
     "firestore": {
-      "port": 8080
+      "port": 9090
     },
     "ui": {
       "enabled": true,

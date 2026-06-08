@@ -1,4 +1,6 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart' show defaultTargetPlatform, TargetPlatform;
 import 'package:flutter/material.dart';
 
 import 'firebase_options.dart';
@@ -17,6 +19,19 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // ── Local emulator: route Cloud Functions calls to local machine ──────────
+  const emulatorHost = String.fromEnvironment(
+    'EMULATOR_HOST',
+    defaultValue: '',
+  );
+  final host = emulatorHost.isNotEmpty
+      ? emulatorHost
+      : (defaultTargetPlatform == TargetPlatform.android
+          ? '10.0.2.2'   // Android emulator → host machine
+          : 'localhost'); // iOS simulator / desktop
+  FirebaseFunctions.instance.useFunctionsEmulator(host, 5001);
+  // ─────────────────────────────────────────────────────────────────────────
 
   runApp(const KorraldApp());
 }

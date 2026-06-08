@@ -1,26 +1,26 @@
-// ⚠️  TEMPLATE — Replace placeholder values before running the app.
+// ✅  Emulator-mode configuration — uses the local Firebase Emulator Suite.
 //
-// Option A (recommended): Run FlutterFire CLI to auto-generate this file:
-//   dart pub global activate flutterfire_cli
-//   flutterfire configure --project=YOUR_FIREBASE_PROJECT_ID
+// Project ID: "demo-korrald"
+// The "demo-" prefix tells the Firebase emulator this is a local-only project
+// that never touches production servers.  API keys and app IDs are intentionally
+// dummy values; the emulator ignores them.
 //
-// Option B: Fill in values manually from:
-//   Firebase Console → Project Settings → Your Apps → SDK setup and configuration
+// Start the emulator before running the app:
+//   firebase emulators:start
+//   (or: firebase emulators:start --import=./emulator-data --export-on-exit)
 
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
-/// Default Firebase options for the current platform.
+/// Firebase options that point exclusively to the local Firebase Emulator Suite.
 ///
-/// Generated values should be sourced from your [google-services.json] (Android)
-/// and [GoogleService-Info.plist] (iOS). See README.md → Setup for details.
+/// All traffic goes to 10.0.2.2 (Android) or localhost (desktop/iOS).
+/// No real Firebase project is needed.
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'Web is not supported in v1. Configure web options if needed.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -34,24 +34,32 @@ class DefaultFirebaseOptions {
     }
   }
 
+  // ── Web ──────────────────────────────────────────────────────────────────
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDemoLocalEmulatorFakeKey000000000',
+    appId: '1:000000000000:web:0000000000000000',
+    messagingSenderId: '000000000000',
+    projectId: 'demo-korrald',
+    storageBucket: 'demo-korrald.firebasestorage.app',
+    authDomain: 'demo-korrald.firebaseapp.com',
+  );
+
   // ── Android ──────────────────────────────────────────────────────────────
-  // Values sourced from: android/app/google-services.json
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'YOUR_ANDROID_API_KEY',
-    appId: 'YOUR_ANDROID_APP_ID',             // e.g. 1:123456789:android:abc123
-    messagingSenderId: 'YOUR_SENDER_ID',       // e.g. 123456789012
-    projectId: 'YOUR_PROJECT_ID',              // e.g. korrald-test
-    storageBucket: 'YOUR_PROJECT_ID.firebasestorage.app',
+    apiKey: 'AIzaSyDemoLocalEmulatorFakeKey000000000',
+    appId: '1:000000000000:android:0000000000000000',
+    messagingSenderId: '000000000000',
+    projectId: 'demo-korrald',
+    storageBucket: 'demo-korrald.firebasestorage.app',
   );
 
   // ── iOS ───────────────────────────────────────────────────────────────────
-  // Values sourced from: ios/Runner/GoogleService-Info.plist
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'YOUR_IOS_API_KEY',
-    appId: 'YOUR_IOS_APP_ID',                 // e.g. 1:123456789:ios:abc123
-    messagingSenderId: 'YOUR_SENDER_ID',
-    projectId: 'YOUR_PROJECT_ID',
-    storageBucket: 'YOUR_PROJECT_ID.firebasestorage.app',
-    iosBundleId: 'com.example.korrald',        // Must match Info.plist BUNDLE_ID
+    apiKey: 'AIzaSyDemoLocalEmulatorFakeKey000000000',
+    appId: '1:000000000000:ios:0000000000000000',
+    messagingSenderId: '000000000000',
+    projectId: 'demo-korrald',
+    storageBucket: 'demo-korrald.firebasestorage.app',
+    iosBundleId: 'com.example.korrald',
   );
 }

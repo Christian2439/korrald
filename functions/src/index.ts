@@ -28,10 +28,12 @@ admin.initializeApp();
  *     .call({ 'query': 'user_identity_token' });
  * ```
  */
-export const scoutSearch = functions.https.onCall(async (data, _context) => {
+export const scoutSearch = functions.https.onCall(async (request) => {
   // ── Input validation ───────────────────────────────────────────────────────
+  // firebase-functions v5+ wraps the client payload in request.data
+  const payload = (request as any)?.data ?? request;
   const query =
-    typeof data?.query === "string" ? (data.query as string).trim() : "";
+    typeof payload?.query === "string" ? (payload.query as string).trim() : "";
 
   if (!query) {
     throw new functions.https.HttpsError(

@@ -52,7 +52,9 @@ ios/Runner/GoogleService-Info.plist
 # Firebase Functions build output
 functions/lib/
 functions/node_modules/
+functions/.package-lock.json
 
 # Firebase local config
 .firebaserc.local
 *.local
+pubspec.lock

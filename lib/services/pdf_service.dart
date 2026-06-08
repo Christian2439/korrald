@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 
 import '../models/scan_result.dart';
 
@@ -33,8 +35,19 @@ class PdfService {
     final fingerprint =
         sha256.convert(utf8.encode(fingerprintSource)).toString();
 
-    // ── 2. Build PDF document ────────────────────────────────────────────────
-    final doc = pw.Document();
+    // ── 2. Load Unicode-capable fonts (Roboto via Google Fonts) ─────────────
+    // The default Helvetica has no Unicode support. Roboto covers full Latin
+    // and common Unicode ranges needed for evidence content.
+    final regularFont = await PdfGoogleFonts.robotoRegular();
+    final boldFont = await PdfGoogleFonts.robotoBold();
+
+    // ── 3. Build PDF document ────────────────────────────────────────────────
+    final doc = pw.Document(
+      theme: pw.ThemeData.withFont(
+        base: regularFont,
+        bold: boldFont,
+      ),
+    );
 
     doc.addPage(
       pw.MultiPage(
@@ -180,16 +193,22 @@ class PdfService {
       ),
     );
 
-    // ── 3. Save to device-local app documents directory ──────────────────────
-    // getApplicationDocumentsDirectory() returns the app-private folder.
-    // Other apps cannot access this path without explicit user sharing.
-    final directory = await getApplicationDocumentsDirectory();
+    // ── 4. Save / deliver the PDF ─────────────────────────────────────────────
     final fileName =
         'korrald_evidence_${DateTime.now().millisecondsSinceEpoch}.pdf';
+    final bytes = await doc.save();
+
+    if (kIsWeb) {
+      // On web there is no local filesystem. Trigger a browser download instead.
+      await Printing.sharePdf(bytes: bytes, filename: fileName);
+      return fileName; // Return the filename as a logical identifier.
+    }
+
+    // Native (Android / iOS / desktop): write to the app-private documents dir.
+    // Other apps cannot access this path without explicit user sharing.
+    final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/$fileName');
-
-    await file.writeAsBytes(await doc.save());
-
+    await file.writeAsBytes(bytes);
     return file.path;
   }
 

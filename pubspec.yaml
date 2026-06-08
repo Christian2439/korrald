@@ -41,6 +41,7 @@ dependencies:
 
   # ── PDF Generation (on-device only — never uploaded) ──────────────────────
   pdf: ^3.11.1                   # Dart PDF rendering library
+  printing: ^5.14.0              # PdfGoogleFonts — Unicode TrueType fonts for PDF
   path_provider: ^2.1.4          # Access local device storage paths
 
   # ── Cryptography ──────────────────────────────────────────────────────────

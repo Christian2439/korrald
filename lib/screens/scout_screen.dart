@@ -1,4 +1,5 @@
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import '../models/scan_result.dart';
@@ -553,7 +554,7 @@ class _SuccessCard extends StatelessWidget {
               Icon(Icons.check_circle_rounded, color: Colors.greenAccent, size: 18),
               SizedBox(width: 8),
               Text(
-                'PDF Saved On-Device',
+                'PDF Ready',
                 style: TextStyle(
                   color: Colors.greenAccent,
                   fontWeight: FontWeight.bold,
@@ -563,19 +564,29 @@ class _SuccessCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          const Text(
-            'Location',
-            style: TextStyle(
-              color: _Palette.textSecondary,
-              fontSize: 11,
-              letterSpacing: 1.1,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            filePath,
-            style: const TextStyle(color: Colors.white70, fontSize: 12),
-          ),
+          if (kIsWeb) ...
+            const [
+              Text(
+                'Your browser download has started. Check your Downloads folder.',
+                style: TextStyle(color: Colors.white70, fontSize: 12, height: 1.4),
+              ),
+            ]
+          else ...
+            [
+              const Text(
+                'Location',
+                style: TextStyle(
+                  color: _Palette.textSecondary,
+                  fontSize: 11,
+                  letterSpacing: 1.1,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                filePath,
+                style: const TextStyle(color: Colors.white70, fontSize: 12),
+              ),
+            ],
           const SizedBox(height: 10),
           const Text(
             '⚠️  This file exists only on this device and is never '
